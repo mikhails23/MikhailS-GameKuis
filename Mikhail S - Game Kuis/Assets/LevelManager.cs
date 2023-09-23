@@ -4,20 +4,11 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-
-
-    [System.Serializable]
-    public struct DataSoal {
-        public string pertanyaan;
-        public Sprite petunjukJawaban;
-
-        public string[] pilihanJawaban;
-        public bool[] adalahBenar;
-
-    }
+    [SerializeField]
+    private PlayerProgress _playerProgress = null;
 
     [SerializeField]
-    private DataSoal[] _soalSoal = new DataSoal[0];
+    private LevelPackKuis _soalSoal = null;
 
     [SerializeField]
     private UI_Pertanyaan _pertanyaan = null;
@@ -31,12 +22,12 @@ public class LevelManager : MonoBehaviour
         _indexSoal++;
 
         // Jika index lebih dari soal terakhir, reset ke awal
-        if (_indexSoal >= _soalSoal.Length) {
+        if (_indexSoal >= _soalSoal.BanyakLevel) {
             _indexSoal = 0;
         }
 
         // Get Soal menurut index
-        DataSoal soal = _soalSoal[_indexSoal];
+        LevelSoalKuis soal = _soalSoal.AmbilLevelKe(_indexSoal);
 
         // Set informasi pertanyaan
         _pertanyaan.SetPertanyaan($"Soal {_indexSoal + 1}", soal.pertanyaan, soal.petunjukJawaban);
@@ -44,7 +35,8 @@ public class LevelManager : MonoBehaviour
         // Set informasi jawaban
         for (int i = 0; i < _pilihanJawaban.Length; i++) {
             UI_PoinJawaban poinJawaban = _pilihanJawaban[i];
-            poinJawaban.SetJawaban(soal.pilihanJawaban[i], soal.adalahBenar[i]);
+            LevelSoalKuis.OpsiJawaban opsi = soal.opsiJawaban[i];
+            poinJawaban.SetJawaban(opsi.jawabanTeks, opsi.adalahBenar);
         }
 
     }
@@ -52,6 +44,10 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!_playerProgress.MuatProgress()) {
+            _playerProgress.SimpanProgress();
+        }
+
         NextLevel();
     }
 
