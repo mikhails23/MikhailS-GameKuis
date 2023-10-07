@@ -7,6 +7,9 @@ public class UI_LevelKuisList : MonoBehaviour
     private InisialDataGameplay _inisialData = null;
 
     [SerializeField]
+    private PlayerProgress _playerProgress = null;
+
+    [SerializeField]
     private UI_OpsiLevelKuis _tombolLevelKuis;
 
     [SerializeField]
@@ -44,6 +47,8 @@ public class UI_LevelKuisList : MonoBehaviour
     public void UnloadLevelPack(LevelPackKuis levelPack) {
         HapusIsiKonten();
 
+        var levelTerbukaTerakhir = _playerProgress.progressData.progressLevel[levelPack.name] - 1;
+
         _levelPack = levelPack;
 
         for (int i = 0; i < levelPack.BanyakLevel; i++) {
@@ -56,6 +61,10 @@ public class UI_LevelKuisList : MonoBehaviour
             lp.transform.SetParent(_content);
 
             lp.transform.localScale = Vector3.one;
+
+            if (i > levelTerbukaTerakhir) {
+                lp.InteraksiTombol = false;
+            }
 
         }
     }

@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 7718733840682924306}
   - component: {fileID: 6512934099996888388}
   - component: {fileID: 2929843982578396903}
+  - component: {fileID: -8900202466377365010}
   m_Layer: 5
   m_Name: Tombol Level
   m_TagString: Untagged
@@ -255,7 +256,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7718733840682924306}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -8900202466377365010}
+        m_TargetAssemblyTypeName: PemanggilSuara, Assembly-CSharp
+        m_MethodName: PanggilSuara
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 4b773172e76114a48b7ad27c54f736d2, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2929843982578396903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,3 +284,15 @@ MonoBehaviour:
   _tombolLevel: {fileID: 6512934099996888388}
   _levelName: {fileID: 4572854962642901396}
   _levelKuis: {fileID: 11400000, guid: c8d6677a8604fa240bf602f7a1e72233, type: 2}
+--- !u!114 &-8900202466377365010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305674995430961720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f822539294ec02f48a258cb82f4446bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

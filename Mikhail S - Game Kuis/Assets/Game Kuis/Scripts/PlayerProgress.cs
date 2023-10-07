@@ -19,19 +19,33 @@ public class PlayerProgress : ScriptableObject
     [SerializeField]
     private string _fileName = "contoh.txt";
 
+    [SerializeField]
+    private string _startingLevelPackName = string.Empty;
+
     public MainData progressData = new MainData();
 
     public void SimpanProgress() {
         // Contoh data
-        progressData.koin = 200;
+        // progressData.koin = 200;
+        // if (progressData.progressLevel == null) {
+        //     progressData.progressLevel = new();
+        // }
+        // progressData.progressLevel.Add("Level Pack 1", 3);
+        // progressData.progressLevel.Add("Level Pack 3", 5);
+
         if (progressData.progressLevel == null) {
             progressData.progressLevel = new();
+            progressData.koin = 0;
+            progressData.progressLevel.Add(_startingLevelPackName, 1);
         }
-        progressData.progressLevel.Add("Level Pack 1", 3);
-        progressData.progressLevel.Add("Level Pack 3", 5);
 
         // Info penyimpanan data
-        var directory = Application.dataPath + "/Temporary";
+        #if UNITY_EDITOR
+        string directory = Application.dataPath + "/Temporary";
+        #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        string directory = Application.persistentDataPath + "/ProgressLokal";
+        #endif
+
         var path = directory + "/" + _fileName;
 
         // Membuat Directory baru
@@ -80,7 +94,12 @@ public class PlayerProgress : ScriptableObject
 
     public bool MuatProgress() {
         // Info penyimpanan data
-        var directory = Application.dataPath + "/Temporary";
+        #if UNITY_EDITOR
+        string directory = Application.dataPath + "/Temporary";
+        #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        string directory = Application.persistentDataPath + "/ProgressLokal";
+        #endif
+
         var path = directory + "/" + _fileName;
 
         // Membuat Directory baru
@@ -104,7 +123,7 @@ public class PlayerProgress : ScriptableObject
                     var namaLevelPack = reader.ReadString();
                     var levelKe = reader.ReadInt32();
                     progressData.progressLevel.Add(namaLevelPack, levelKe);
-                    Debug.Log($"{namaLevelPack}:{levelKe}");
+                    Debug.Log($"Load {namaLevelPack}, Level ke-{levelKe}");
                 }
 
                 // Putus aliran memori dengan File
@@ -125,7 +144,7 @@ public class PlayerProgress : ScriptableObject
             // Putus aliran memori dengan File
             fileStream.Dispose();
 
-            Debug.Log($"{progressData.koin}; {progressData.progressLevel.Count}");
+            Debug.Log($"Load progress Koin: {progressData.koin}, Progress level: {progressData.progressLevel.Count}");
 
             return true;
         } catch (System.Exception e) {

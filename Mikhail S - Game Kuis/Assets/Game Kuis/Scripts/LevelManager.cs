@@ -28,6 +28,15 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private string _namaScenePilihMenu = string.Empty;
 
+    [SerializeField]
+    private PemanggilSuara _pemanggilSuara = null;
+
+    [SerializeField]
+    private AudioClip _suaraMenang = null;
+
+    [SerializeField] 
+    private AudioClip _suaraKalah = null;
+
     public void NextLevel() {
         // Soal index selanjutnya
         _indexSoal++;
@@ -57,13 +66,13 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // if (!_playerProgress.MuatProgress()) {
-        //     _playerProgress.SimpanProgress();
-        // }
         _soalSoal = _inisialData.levelPack;
         _indexSoal = _inisialData.levelIndex - 1;
 
         NextLevel();
+
+        // Play BGM Gameplay
+        AudioManager.instance.PlayBGM(1);
 
         // Subscribe Event
         UI_PoinJawaban.EventJawabSoal += UI_PoinJawaban_EventJawabSoal;
@@ -76,8 +85,31 @@ public class LevelManager : MonoBehaviour
 
     private void UI_PoinJawaban_EventJawabSoal(string jawaban, bool adalahBenar)
     {
-        if (adalahBenar) {
+        // Tambahan Stop BGM jika jawaban salah
+        if (!adalahBenar) {
+        //     _pemanggilSuara.StopBGM();
+            AudioManager.instance.StopBGM();
+        }
+
+        _pemanggilSuara.PanggilSuara(adalahBenar ? _suaraMenang : _suaraKalah);
+
+        // Jika jawaban salah maka keluar
+        if (!adalahBenar) {
+            return;
+        }
+
+        var namaLevelPack = _inisialData.levelPack.name;
+        int levelTerakhir = _playerProgress.progressData.progressLevel[namaLevelPack];
+
+        // Cek jika level terakhir pemain telah diselesaikan
+        if (_indexSoal + 2 > levelTerakhir) {
+            // Tambah Koin sebagai reward
             _playerProgress.progressData.koin += 20;
+
+            // Untuk membuka level selanjutnya di Menu Level
+            _playerProgress.progressData.progressLevel[namaLevelPack] = _indexSoal + 2;
+            
+            _playerProgress.SimpanProgress();
         }
     }
 
